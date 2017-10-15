@@ -1,1 +1,1 @@
-# Live2Learn-Cananda.github.io
+# Live2Learn-Canada.github.io
