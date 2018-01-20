@@ -10,7 +10,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
 CHUNK = 1024
-RECORD_SECONDS = 20
+RECORD_SECONDS = 1000
 WAVE_OUTPUT_FILENAME = "file.wav"
 
 audio = pyaudio.PyAudio()
@@ -41,22 +41,22 @@ def Pitch(signal):
 
 def noteFinder(freq):
 	if (freq >= 947  and freq <= 991):
-		print("b")
+#	print("b")
 		return "b"
 	elif (freq >= 861 and freq <= 883):
-		print("a")
+#	print("a")
 		return "a"
 	elif (freq >= 775 and freq <= 797 ):
-		print("g")
+#	print("g")
 		return "g"
 	elif (freq >= 732 and freq <= 754 ):
-		print("f#")
+#	print("f#")
 		return "f#"
 	elif (freq >= 646 or freq <= 689 ):
-		print("e")
+#	print("e")
 		return "e"
 	elif (freq >= 556 or freq <= 603):
-		print ("Low D")
+#	print ("Low D")
 		return "Low D"
 	else:
 		print("Frequency: ", freq)
@@ -71,6 +71,7 @@ def movVkKeyPress(Frequency):
 	for i in range(0, 2):
 		if (noteFinder(Frequency[i])!= None):
 			note = noteFinder(Frequency[i])
+			print(note)
 			if (note == currentNote[i] and noteCounter[i] > 2):
 				if (note == "b"):
 					if(i==0):
@@ -137,6 +138,7 @@ def movDicKeyPress(Frequency):
 	for i in range(0, 2):
 		if (noteFinder(Frequency[i])!= None):
 			note = noteFinder(Frequency[i])
+			print(note)
 			if (note == currentNote[i] and noteCounter[i] > 2):
 				if (note == "b"):
 					if(i==0):
