@@ -29,10 +29,13 @@ output = True,
 frames_per_buffer = chunk)
 
 def getFrequency():
+    frequencies= []
     for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         data = stream.read(chunk)
         Frequency=Pitch(data)
-        return Frequency
+        frequencies.append(Frequency)
+    desiredFrequency=max(frequencies)-min(frequencies)
+    return desiredFrequency
     
 def getNote():
     if getFrequency>2900 and getFrequency<3000:
