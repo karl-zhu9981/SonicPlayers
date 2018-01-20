@@ -4,7 +4,7 @@ import numpy as np
 import pyautogui
 import math
 import keyboard
-
+import time
 
 
 import ctypes
@@ -15,53 +15,53 @@ ULONG_PTR = ctypes.POINTER(DWORD)
 WORD = ctypes.c_ushort
 
 class MOUSEINPUT(ctypes.Structure):
-	_fields_ = (('dx', LONG),
-				('dy', LONG),
-				('mouseData', DWORD),
-				('dwFlags', DWORD),
-				('time', DWORD),
-				('dwExtraInfo', ULONG_PTR))
+    _fields_ = (('dx', LONG),
+                ('dy', LONG),
+                ('mouseData', DWORD),
+                ('dwFlags', DWORD),
+                ('time', DWORD),
+                ('dwExtraInfo', ULONG_PTR))
 
 class KEYBDINPUT(ctypes.Structure):
-	_fields_ = (('wVk', WORD),
-				('wScan', WORD),
-				('dwFlags', DWORD),
-				('time', DWORD),
-				('dwExtraInfo', ULONG_PTR))
+    _fields_ = (('wVk', WORD),
+                ('wScan', WORD),
+                ('dwFlags', DWORD),
+                ('time', DWORD),
+                ('dwExtraInfo', ULONG_PTR))
 
 class HARDWAREINPUT(ctypes.Structure):
-	_fields_ = (('uMsg', DWORD),
-				('wParamL', WORD),
-				('wParamH', WORD))
+    _fields_ = (('uMsg', DWORD),
+                ('wParamL', WORD),
+                ('wParamH', WORD))
 
 class _INPUTunion(ctypes.Union):
-	_fields_ = (('mi', MOUSEINPUT),
-				('ki', KEYBDINPUT),
-				('hi', HARDWAREINPUT))
+    _fields_ = (('mi', MOUSEINPUT),
+                ('ki', KEYBDINPUT),
+                ('hi', HARDWAREINPUT))
 
 class INPUT(ctypes.Structure):
-	_fields_ = (('type', DWORD),
-				('union', _INPUTunion))
+    _fields_ = (('type', DWORD),
+                ('union', _INPUTunion))
 
 def SendInput(*inputs):
-	nInputs = len(inputs)
-	LPINPUT = INPUT * nInputs
-	pInputs = LPINPUT(*inputs)
-	cbSize = ctypes.c_int(ctypes.sizeof(INPUT))
-	return ctypes.windll.user32.SendInput(nInputs, pInputs, cbSize)
+    nInputs = len(inputs)
+    LPINPUT = INPUT * nInputs
+    pInputs = LPINPUT(*inputs)
+    cbSize = ctypes.c_int(ctypes.sizeof(INPUT))
+    return ctypes.windll.user32.SendInput(nInputs, pInputs, cbSize)
 
 INPUT_MOUSE = 0
 INPUT_KEYBOARD = 1
 INPUT_HARDWARD = 2
 
 def Input(structure):
-	if isinstance(structure, MOUSEINPUT):
-		return INPUT(INPUT_MOUSE, _INPUTunion(mi=structure))
-	if isinstance(structure, KEYBDINPUT):
-		return INPUT(INPUT_KEYBOARD, _INPUTunion(ki=structure))
-	if isinstance(structure, HARDWAREINPUT):
-		return INPUT(INPUT_HARDWARE, _INPUTunion(hi=structure))
-	raise TypeError('Cannot create INPUT structure!')
+    if isinstance(structure, MOUSEINPUT):
+        return INPUT(INPUT_MOUSE, _INPUTunion(mi=structure))
+    if isinstance(structure, KEYBDINPUT):
+        return INPUT(INPUT_KEYBOARD, _INPUTunion(ki=structure))
+    if isinstance(structure, HARDWAREINPUT):
+        return INPUT(INPUT_HARDWARE, _INPUTunion(hi=structure))
+    raise TypeError('Cannot create INPUT structure!')
 
 WHEEL_DELTA = 120
 XBUTTON1 = 0x0001
@@ -82,7 +82,7 @@ MOUSEEVENTF_XDOWN = 0x0080
 MOUSEEVENTF_XUP = 0x0100
 
 def MouseInput(flags, x, y, data):
-	return MOUSEINPUT(x, y, data, flags, 0, None)
+    return MOUSEINPUT(x, y, data, flags, 0, None)
 
 VK_LBUTTON = 0x01               # Left mouse button
 VK_RBUTTON = 0x02               # Right mouse button
@@ -197,23 +197,23 @@ VK_LAUNCH_MEDIA_SELECT = 0xB5   # Select Media key
 VK_LAUNCH_APP1 = 0xB6           # Start Application 1 key
 VK_LAUNCH_APP2 = 0xB7           # Start Application 2 key
 VK_OEM_1 = 0xBA                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the ';:' key
+                                # For the US standard keyboard, the ';:' key
 VK_OEM_PLUS = 0xBB              # For any country/region, the '+' key
 VK_OEM_COMMA = 0xBC             # For any country/region, the ',' key
 VK_OEM_MINUS = 0xBD             # For any country/region, the '-' key
 VK_OEM_PERIOD = 0xBE            # For any country/region, the '.' key
 VK_OEM_2 = 0xBF                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the '/?' key
+                                # For the US standard keyboard, the '/?' key
 VK_OEM_3 = 0xC0                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the '`~' key
+                                # For the US standard keyboard, the '`~' key
 VK_OEM_4 = 0xDB                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the '[{' key
+                                # For the US standard keyboard, the '[{' key
 VK_OEM_5 = 0xDC                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the '\|' key
+                                # For the US standard keyboard, the '\|' key
 VK_OEM_6 = 0xDD                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the ']}' key
+                                # For the US standard keyboard, the ']}' key
 VK_OEM_7 = 0xDE                 # Used for miscellaneous characters; it can vary by keyboard.
-								# For the US standard keyboard, the 'single-quote/double-quote' key
+                                # For the US standard keyboard, the 'single-quote/double-quote' key
 VK_OEM_8 = 0xDF                 # Used for miscellaneous characters; it can vary by keyboard.
 VK_OEM_102 = 0xE2               # Either the angle bracket key or the backslash key on the RT 102-key keyboard
 VK_PROCESSKEY = 0xE5            # IME PROCESS key
@@ -267,33 +267,75 @@ KEY_V = 0x56
 KEY_W = 0x57
 KEY_X = 0x2D
 KEY_Y = 0x59
-KEY_Z = 0x5C
+KEY_Z = 0x2C
 
 def KeybdInput(code, flags):
-	return KEYBDINPUT(code, code, flags, 0, None)
+    return KEYBDINPUT(code, code, flags, 0, None)
 
 def HardwareInput(message, parameter):
-	return HARDWAREINPUT(message & 0xFFFFFFFF,
-						 parameter & 0xFFFF,
-						 parameter >> 16 & 0xFFFF)
+    return HARDWAREINPUT(message & 0xFFFFFFFF,
+                         parameter & 0xFFFF,
+                         parameter >> 16 & 0xFFFF)
 
 def Mouse(flags, x=0, y=0, data=0):
-	return Input(MouseInput(flags, x, y, data))
+    return Input(MouseInput(flags, x, y, data))
 
 def Keyboard(code, flags=0):
-	return Input(KeybdInput(code, flags))
+    return Input(KeybdInput(code, flags))
 
 def Hardware(message, parameter=0):
-	return Input(HardwareInput(message, parameter))
+    return Input(HardwareInput(message, parameter))
 
 ################################################################################
 
+import string
 
+UPPER = frozenset('~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:"ZXCVBNM<>?')
+LOWER = frozenset("`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./")
+ORDER = string.ascii_letters + string.digits + ' \b\r\t'
+ALTER = dict(zip('!@#$%^&*()', '1234567890'))
+OTHER = {'`': VK_OEM_3,
+         '~': VK_OEM_3,
+         '-': VK_OEM_MINUS,
+         '_': VK_OEM_MINUS,
+         '=': VK_OEM_PLUS,
+         '+': VK_OEM_PLUS,
+         '[': VK_OEM_4,
+         '{': VK_OEM_4,
+         ']': VK_OEM_6,
+         '}': VK_OEM_6,
+         '\\': VK_OEM_5,
+         '|': VK_OEM_5,
+         ';': VK_OEM_1,
+         ':': VK_OEM_1,
+         "'": VK_OEM_7,
+         '"': VK_OEM_7,
+         ',': VK_OEM_COMMA,
+         '<': VK_OEM_COMMA,
+         '.': VK_OEM_PERIOD,
+         '>': VK_OEM_PERIOD,
+         '/': VK_OEM_2,
+         '?': VK_OEM_2}
 
+def keyboard_stream(string):
+    mode = False
+    for character in string.replace('\r\n', '\r').replace('\n', '\r'):
+        if mode and character in LOWER or not mode and character in UPPER:
+            yield Keyboard(VK_SHIFT, mode and KEYEVENTF_KEYUP)
+            mode = not mode
+        character = ALTER.get(character, character)
+        if character in ORDER:
+            code = ord(character.upper())
+        elif character in OTHER:
+            code = OTHER[character]
+        else:
+            continue
+            raise ValueError('String is not understood!')
+        yield Keyboard(code)
+        yield Keyboard(code, KEYEVENTF_KEYUP)
+    if mode:
+        yield Keyboard(VK_SHIFT, KEYEVENTF_KEYUP)
 
-
-
-import time
 
 chunk = 1024
 FORMAT = pyaudio.paInt16
@@ -303,11 +345,11 @@ RECORD_SECONDS = 1000
 
 
 def Pitch(signal):
-	signal = np.fromstring(signal, 'Int16');
-	crossing = [math.copysign(1.0, s) for s in signal]
-	index = find(np.diff(crossing));
-	f0=round(len(index) *RATE /(2*np.prod(len(signal))))
-	return f0;
+    signal = np.fromstring(signal, 'Int16');
+    crossing = [math.copysign(1.0, s) for s in signal]
+    index = find(np.diff(crossing));
+    f0=round(len(index) *RATE /(2*np.prod(len(signal))))
+    return f0;
 
 
 p = pyaudio.PyAudio()
@@ -318,47 +360,59 @@ rate = RATE,
 input = True,
 output = True,
 frames_per_buffer = chunk)
+unique = []
+dictionary = {}
+#---------------
 
-notes = {947:"b",969:"b",991:"b",
-		883:"a", 861:"a",
-		775:"g",797:"g",1550:"g",2326:"g",2304:"g",2347:"g",2369:"g",
-		732:"f#",754:"f#",2261:"f#",
-		646:"e",668:"e",689:"e",
-		581:"Low D", 560:"Low D", 603:"Low D"}
+dictionary =  {1184.0: "Low D", 1206.0: "Low D", 668.0: "E", 646.0: "E",732.0: "F#", 754.0:"F#",775.0: "G", 797.0: "G", 883.0: "A", 861.0:"A",969.0: "B", 
+991.0: "B" , 1141.0: "C", 1120.0: "C", 1098.0: "C", 1184.0:"High D"}
 
+#---------------
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
-	data = stream.read(chunk)
-	Frequency=Pitch(data)
-	if(Frequency in notes):
-		print(notes[Frequency])
-		if(notes[Frequency]=="b"):
-			SendInput(Keyboard(KEY_X))
-			time.sleep(0.1)
-			SendInput(Keyboard(KEY_X, KEYEVENTF_KEYUP))
-		elif(notes[Frequency]=="a"):
-			SendInput(Keyboard(VK_Z))
-			time.sleep(0.1)
-			SendInput(Keyboard(VK_Z, KEYEVENTF_KEYUP))
-		elif(notes[Frequency]=="g"):
-			SendInput(Keyboard(VK_DOWN))
-			time.sleep(0.1)
-			SendInput(Keyboard(VK_DOWN, KEYEVENTF_KEYUP))
-		elif(notes[Frequency]=="f#"):
-			SendInput(Keyboard(VK_UP))
-			time.sleep(0.1)
-			SendInput(Keyboard(VK_UP, KEYEVENTF_KEYUP))
-		elif(notes[Frequency]=="e"):
-			SendInput(Keyboard(VK_RIGHT))
-			time.sleep(0.1)
-			SendInput(Keyboard(VK_RIGHT, KEYEVENTF_KEYUP))
-		elif(notes[Frequency]=="Low D"):
-			SendInput(Keyboard(VK_LEFT))
-			time.sleep(0.1)
-			SendInput(Keyboard(VK_LEFT, KEYEVENTF_KEYUP))
-	else:
-		print("Frequency: ",Frequency)
+    data = stream.read(chunk)
+    Frequency=Pitch(data)
 
-	#SendInput(Keyboard(KEYEVENTF_KEYUP))
-	#notes = {2627:'a',2606:'a',2649:'a',2326:'b'}
-	#note = notes[Frequency]
+    
+    print ("Frequency: ",Frequency)
+    if Frequency in dictionary:
+        print(dictionary[Frequency])
+        
+        if dictionary[Frequency] == "A":
+            SendInput(Keyboard(VK_RIGHT))
+            time.sleep(.1)
+            
+            SendInput(Keyboard(VK_RIGHT,KEYEVENTF_KEYUP))
+            
+        if dictionary[Frequency] == "G":
+
+            SendInput(Keyboard(VK_LEFT))
+            time.sleep(.1)
+            SendInput(Keyboard(VK_LEFT,KEYEVENTF_KEYUP))
+        if dictionary[Frequency] == "-":
+
+            SendInput(Keyboard(VK_UP))
+            time.sleep(.1)
+            SendInput(Keyboard(VK_UP,KEYEVENTF_KEYUP))
+        if dictionary[Frequency] == "":
+
+            SendInput(Keyboard(VK_DOWN))
+            time.sleep(.1)
+            SendInput(Keyboard(VK_DOWN,KEYEVENTF_KEYUP))
+
+        if dictionary[Frequency] == "Low D":
+
+            SendInput(Keyboard(KEY_X))
+            time.sleep(.1)
+            SendInput(Keyboard(KEY_X,KEYEVENTF_KEYUP))
+
+        if dictionary[Frequency] == "B":
+
+            SendInput(Keyboard(KEY_Z))
+            time.sleep(.1)
+            SendInput(Keyboard(KEY_Z,KEYEVENTF_KEYUP))
+
+
+            
+
+
 
