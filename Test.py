@@ -27,16 +27,18 @@ notes = {947:"b",969:"b",991:"b",
 def Pitch(signal):
 	signal = np.fromstring(signal, 'Int16')
 #Split Signal by 1/2; Part 1
-	signalL = signal[::2]
-	crossingL = [math.copysign(1.0, s) for s in signalL]
+
+	crossing = [math.copysign(1.0, s) for s in signal]
+	crossingL =crossing[::2]
 	indexL = find(np.diff(crossingL))
-	f0L = round(len(indexL) * RATE / (2 * np.prod(len(signalL))))
-	# Split Signal by 1/2; Part 2
-	signalR = signal[1::2]
-	crossingR = [math.copysign(1.0, s) for s in signalR]
+	f0L = round(len(indexL) * RATE / (2 * np.prod(len(signal))))
+	# Split Signal by 1/2; Part 22
+	crossingR =crossing[1::2]
 	indexR = find(np.diff(crossingR))
-	f0R = round(len(indexR) * RATE / (2 * np.prod(len(signalR))))
+	f0R = round(len(indexR) * RATE / (2 * np.prod(len(signal))))
+
 	#Merge and return
+	print(f0L,f0R)
 	return [f0L, f0R]
 
 def noteFinder(freq):
@@ -52,14 +54,14 @@ def noteFinder(freq):
 	elif (freq >= 732 and freq <= 754 ):
 #	print("f#")
 		return "f#"
-	elif (freq >= 646 or freq <= 689 ):
+	elif (freq >= 646 and freq <= 689 ):
 #	print("e")
 		return "e"
-	elif (freq >= 556 or freq <= 603):
+	elif (freq >= 556 and freq <= 603):
 #	print ("Low D")
 		return "Low D"
 	else:
-		print("Frequency: ", freq)
+#		print("Frequency: ", freq)
 		return None
 
 currentNote = ["",""]
@@ -69,8 +71,8 @@ noteCounter = [0,0]
 def movVkKeyPress(Frequency):
 	sleep = False
 	for i in range(0, 2):
-		if (noteFinder(Frequency[i])!= None):
-			note = noteFinder(Frequency[i])
+		if (notes(Frequency[i])!= None):
+			note = notes(Frequency)
 			print(note)
 			if (note == currentNote[i] and noteCounter[i] > 2):
 				if (note == "b"):
@@ -115,6 +117,8 @@ def movVkKeyPress(Frequency):
 			noteCounter[i] += 1
 		else:
 			print("Frequency: ", Frequency[i])
+			noteCounter[i] = 0
+			currentNote[i] = note
 	return sleep
 
 def movVkKeyPressRel(Freq):
@@ -135,8 +139,8 @@ def movVkKeyPressRel(Freq):
 '''DirectX Key map'''
 def movDicKeyPress(Frequency):
 	sleep = False
-	for i in range(0, 2):
-		if (noteFinder(Frequency[i])!= None):
+	for i in range(0,2):
+		if (noteFinder(Frequency[i])!=None):
 			note = noteFinder(Frequency[i])
 			print(note)
 			if (note == currentNote[i] and noteCounter[i] > 2):
@@ -215,7 +219,7 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
 	frames.append(data)
 # Adds Data to frame for save to Frequency file
 	freq=Pitch(data)
-	movDicKeyPress(freq)
+	movDicKeyPressRel(freq)
 	frequencies.append(freq)
 # stop Recording
 stream.stop_stream()
