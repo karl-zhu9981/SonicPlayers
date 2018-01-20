@@ -8,7 +8,7 @@ chunk = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 6
+RECORD_SECONDS = 15
 
 
 def Pitch(signal):
@@ -28,42 +28,23 @@ input = True,
 output = True,
 frames_per_buffer = chunk)
 unique = []
-freq = 0
-value = 0
 dictionary = {}
-listx = []
+#---------------
+
+dictionary =  {1184.0: "Low D", 1206.0: "Low D", 668.0: "E", 646.0: "E",732.0: "F#", 754.0:"F#",775.0: "G", 797.0: "G", 883.0: "A", 861.0:"A",969.0: "B", 
+991.0: "B" , 1141.0: "C", 1120.0: "C", 1098.0: "C", 1184.0:"High D"}
+
+#---------------
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     data = stream.read(chunk)
     Frequency=Pitch(data)
 
-    #Low D
-    Low_D = {1658.0:"Low D", 1680.0: "Low D", 1701.0: "Low D", 1723.0: "Low D", 1744.0: "Low D", 1766.0:"Low D", 1787.0:"Low D"}
-
-    #E
-    E = {668.0: "E", 646.0: "E"}
     
-    #F#
-    F = {711.0: "F#", 732.0: "F#", 754.0:"F#", 775.0:"F#", 797.0:"F#", 818.0:"F#", 840.0:"F#"}
-    #G 
-    G = {775.0: "G", 797.0:  "G"}
-    
-    #A
-    A ={883.0: "A", 861.0:"A"}
-  
-    #B
-    B ={969.0: "B", 991.0: "B" }
-
-    #C Sharp, C = C#,    
-    C_dict = {1120.0:"C", 1184.0:"C", 1098.0:"C", 1163.0:"C", 1034.0:"C", 1292.0:"C", 1227.0:"C", 1012.0:"C", 1077.0:"C", 1141.0:"C", 1206.0:"C", 1055.0:"C"}
-
-    #High D
-    High_D = {1034.0:"High D", 1141.0:"High D", 1163.0:"High D", 1184.0:"High D", 1120.0: "High D"}
     print ("Frequency: ",Frequency)
-     
-    unique.append(Frequency)
-            
-    big_dict = A.update(G)
-print(big_dict)
+    if Frequency in dictionary:
+        print(dictionary[Frequency])
+
+
 
 
 
