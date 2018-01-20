@@ -1,4 +1,4 @@
-import pyautogui as press
+import pyautogui
 import pyaudio
 import wave
 import sys
@@ -25,8 +25,17 @@ def Pitch(signal):
     return f0;
 
 def noteFinder(freq):
-    if(freq == 690):
-        return "B"
+    if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
+    	pyautogui.press('down')
+    	print("a")
+    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
+    	pyautogui.press('left')
+    	print("g")
+    elif(Frequency==581 or Frequency == 560 or Frequency == 603):
+        pyautogui.press('right')
+    	print("Low D")
+    else:
+    	print ("Frequency: ",Frequency)
 
 
 # start Recording
@@ -44,7 +53,7 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
     frames.append(data)
 # Adds Data to frame for save to Frequency file
     Frequency=Pitch(data)
-
+    noteFinder(Frequency)
     frequencies.append(Frequency)
 print("finished recording")
 
