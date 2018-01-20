@@ -1,7 +1,7 @@
-import pyautogui
+
 import pyaudio
 import wave
-import sys
+import KeyPress
 from matplotlib.mlab import find
 import numpy as np
 import math
@@ -9,8 +9,8 @@ import math
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-CHUNK = 2048
-RECORD_SECONDS = 5
+CHUNK = 1024
+RECORD_SECONDS = 20
 WAVE_OUTPUT_FILENAME = "file.wav"
 
 audio = pyaudio.PyAudio()
@@ -18,24 +18,29 @@ audio = pyaudio.PyAudio()
 
 #Turns raw audio input into frequency data
 def Pitch(signal):
-    signal = np.fromstring(signal, 'Int16');
+    signal = np.fromstring(signal, 'Int16')
     crossing = [math.copysign(1.0, s) for s in signal]
-    index = find(np.diff(crossing));
-    f0=round(len(index) *RATE /(2*np.prod(len(signal))))
-    return f0;
+    index = find(np.diff(crossing))
+    f0=round (len(index) *RATE / (2*np.prod( len(signal))))
+    return f0
 
 def noteFinder(freq):
-    if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
-        pyautogui.press('down')
+    if (freq > 2900 and freq < 3000):
+        print("b")
+    elif (freq == 2627 or freq == 2606 or freq == 2649 or freq == 2584):
         print("a")
-    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
-        pyautogui.press('left')
+#        SendInput(Keyboard(VK_RIGHT))
+    elif (freq == 2326 or freq == 2304 or freq == 2347 or freq == 2369):
         print("g")
-    elif(Frequency==581 or Frequency == 560 or Frequency == 603):
-        pyautogui.press('right')
+ #       SendInput(Keyboard(VK_LEFT, KEYEVENTF_KEYUP))
+    elif (freq == 2218 or freq == 2196 or freq == 2261):
+        print("f#")
+    elif (freq == 646 or freq == 668 or freq == 689):
+        print("e")
+    elif (freq == 581 or freq == 560 or freq == 603):
         print("Low D")
     else:
-        print ("Frequency: ",Frequency)
+        print("Frequency: ", freq)
 
 
 # start Recording
@@ -46,18 +51,17 @@ print("recording...")
 
 frames = []
 frequencies = []
+counter ={}
 for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
 # Takes data from stream over duration of 1024 frames(Chunk Size)
     data = stream.read(CHUNK)
 # Adds Data to frame for save to .wav file
     frames.append(data)
 # Adds Data to frame for save to Frequency file
-    Frequency=Pitch(data)
-    noteFinder(Frequency)
-    frequencies.append(Frequency)
+    freq=Pitch(data)
+    noteFinder(freq)
+    frequencies.append(freq)
 print("finished recording")
-
-
 # stop Recording
 stream.stop_stream()
 stream.close()
