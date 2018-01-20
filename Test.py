@@ -44,7 +44,7 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
     frames.append(data)
 # Adds Data to frame for save to Frequency file
     Frequency=Pitch(data)
-    
+
     frequencies.append(Frequency)
 print("finished recording")
 
