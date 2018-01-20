@@ -27,9 +27,11 @@ rate = RATE,
 input = True,
 output = True,
 frames_per_buffer = chunk)
-unique = set()
+unique = []
 freq = 0
 value = 0
+dictionary = {}
+listx = []
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     data = stream.read(chunk)
     Frequency=Pitch(data)
@@ -37,43 +39,31 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     #Low D
     Low_D = {1658.0:"Low D", 1680.0: "Low D", 1701.0: "Low D", 1723.0: "Low D", 1744.0: "Low D", 1766.0:"Low D", 1787.0:"Low D"}
 
-    #High D
-    High_D = {1034.0:"High D", 1141.0:"High D", 1163.0:"High D", 1184.0:"High D", 1120.0: "High D"}
-
     #E
-    E = {1292.0 : "E", 1314.0: "E", 1335.0: "E", 1357.0:"E", 1378.0:"E", 1400.0:"E", 1443.0:"E", 1270.0:"E"}
-    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
-        print("F#")
-
-    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
-        print("G")
-
-    if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
-        print("A")
-
-    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
-        print("B")
+    E = {668.0: "E", 646.0: "E"}
+    
+    #F#
+    F = {711.0: "F#", 732.0: "F#", 754.0:"F#", 775.0:"F#", 797.0:"F#", 818.0:"F#", 840.0:"F#"}
+    #G 
+    G = {775.0: "G", 797.0:  "G"}
+    
+    #A
+    A ={883.0: "A", 861.0:"A"}
+  
+    #B
+    B ={969.0: "B", 991.0: "B" }
 
     #C Sharp, C = C#,    
     C_dict = {1120.0:"C", 1184.0:"C", 1098.0:"C", 1163.0:"C", 1034.0:"C", 1292.0:"C", 1227.0:"C", 1012.0:"C", 1077.0:"C", 1141.0:"C", 1206.0:"C", 1055.0:"C"}
-        
 
-    if(Frequency==581 or Frequency == 560 or Frequency == 603):
-        print("Low D")
-    else:
-        print ("Frequency: ",Frequency)
-        #if Frequency >1250 and Frequency < 1450:
-        unique.add(Frequency)
+    #High D
+    High_D = {1034.0:"High D", 1141.0:"High D", 1163.0:"High D", 1184.0:"High D", 1120.0: "High D"}
+    print ("Frequency: ",Frequency)
+     
+    unique.append(Frequency)
             
-    if Frequency in Low_D:
-        print("D")
-    if Frequency in High_D:
-        print("Hd")
-    if Frequency in E:
-        print("E")
-        
-    freq +=1
-print( float(value/freq))
-print(sorted(unique))
+    big_dict = A.update(G)
+print(big_dict)
+
 
 
