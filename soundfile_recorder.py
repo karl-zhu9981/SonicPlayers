@@ -1,16 +1,16 @@
 from matplotlib.mlab import find
 import pyaudio
 import numpy as np
+import pyautogui
 import math
+import keyboard
 
 
 chunk = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 15
-
-
+RECORD_SECONDS = 500
 def Pitch(signal):
     signal = np.fromstring(signal, 'Int16');
     crossing = [math.copysign(1.0, s) for s in signal]
@@ -43,6 +43,13 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     print ("Frequency: ",Frequency)
     if Frequency in dictionary:
         print(dictionary[Frequency])
+        if dictionary[Frequency] == "A":
+            pyautogui.press('left')
+        if dictionary[Frequency] == "G":
+            pyautogui.press('right')
+
+
+
 
 
 
