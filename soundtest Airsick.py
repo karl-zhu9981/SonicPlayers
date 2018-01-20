@@ -331,7 +331,7 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 	Frequency=Pitch(data)
 	if(Frequency in notes):
 		print(notes[Frequency])
-		elif(notes[Frequency]=="b"):
+		if(notes[Frequency]=="b"):
 			SendInput(Keyboard(KEY_X))
 			time.sleep(0.1)
 			SendInput(Keyboard(KEY_X, KEYEVENTF_KEYUP))
