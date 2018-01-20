@@ -38,7 +38,6 @@ def getFrequency():
     
 def getNote():
     if getFrequency()>2900 and getFrequency()<3000:
-        #Note=b
         pyautogui.press('up')
         print("b")
     if getFrequency() == 2627 or getFrequency() == 2606 or getFrequency() == 2649 or getFrequency() == 2584:
