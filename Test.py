@@ -31,11 +31,11 @@ def Pitch(signal):
 	crossing = [math.copysign(1.0, s) for s in signal]
 	crossingL =crossing[::2]
 	indexL = find(np.diff(crossingL))
-	f0L = round(len(indexL) * RATE / (2 * np.prod(len(signal))))
+	f0L = round(len(indexL) * RATE / (1 * np.prod(len(signal))))
 	# Split Signal by 1/2; Part 22
 	crossingR =crossing[1::2]
 	indexR = find(np.diff(crossingR))
-	f0R = round(len(indexR) * RATE / (2 * np.prod(len(signal))))
+	f0R = round(len(indexR) * RATE / (1 * np.prod(len(signal))))
 
 	#Merge and return
 	print(f0L,f0R)
