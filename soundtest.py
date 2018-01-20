@@ -37,16 +37,17 @@ def getFrequency():
     return desiredFrequency
     
 def getNote():
-    if getFrequency()>2900 and getFrequency()<3000:
+    num= getFrequency()
+    if num>2900 and num<3000:
         pyautogui.press('up')
         print("b")
-    if getFrequency() == 2627 or getFrequency() == 2606 or getFrequency() == 2649 or getFrequency() == 2584:
+    if num == 2627 or num == 2606 or num == 2649 or num == 2584:
     	pyautogui.press('down')
     	print("a")
-    if getFrequency() == 2326 or getFrequency() == 2304 or getFrequency() == 2347 or getFrequency() == 2369:
+    if num == 2326 or num == 2304 or num == 2347 or num == 2369:
     	pyautogui.press('left')
     	print("g")
-    elif getFrequency()==581 or getFrequency() == 560 or getFrequency() == 603:
+    elif num ==581 or num == 560 or num == 603:
         pyautogui.press('right')
     	print("Low D")
     else:
