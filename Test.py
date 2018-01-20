@@ -24,14 +24,26 @@ def Pitch(signal):
     f0=round(len(index) *RATE /(2*np.prod(len(signal))))
     return f0;
 
-def noteFinder(freq):
-    if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
+def getFrequency():
+    frequencies= []
+    for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
+        data = stream.read(chunk)
+        Frequency=Pitch(data)
+        frequencies.append(Frequency)
+    return Frequency
+    
+def noteFinder():
+    num= getFrequency()
+    if num>2900 and num<3000:
+        pyautogui.press('up')
+        print("b")
+    if num == 2627 or num == 2606 or num == 2649 or num == 2584:
     	pyautogui.press('down')
     	print("a")
-    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
+    if num == 2326 or num == 2304 or num == 2347 or num == 2369:
     	pyautogui.press('left')
     	print("g")
-    elif(Frequency==581 or Frequency == 560 or Frequency == 603):
+    elif num ==581 or num == 560 or num == 603:
         pyautogui.press('right')
     	print("Low D")
     else:
