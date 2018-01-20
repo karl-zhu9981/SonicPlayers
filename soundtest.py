@@ -41,14 +41,16 @@ def getNote():
         #Note=b
         pyautogui.press('up')
         print("b")
-    if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
+    if getFrequency() == 2627 or getFrequency() == 2606 or getFrequency() == 2649 or getFrequency() == 2584:
     	pyautogui.press('down')
     	print("a")
-    if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
+    if getFrequency() == 2326 or getFrequency() == 2304 or getFrequency() == 2347 or getFrequency() == 2369:
     	pyautogui.press('left')
     	print("g")
-    elif(Frequency==581 or Frequency == 560 or Frequency == 603):
+    elif getFrequency()==581 or getFrequency() == 560 or getFrequency() == 603:
         pyautogui.press('right')
     	print("Low D")
     else:
     	print ("Frequency: ",Frequency)
+
+getNote()
