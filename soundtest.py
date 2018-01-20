@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 
-chunk = 1024
+chunk = 512
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
@@ -28,10 +28,15 @@ input = True,
 output = True,
 frames_per_buffer = chunk)
 
-for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
-    data = stream.read(chunk)
-    Frequency=Pitch(data)
-    if(Frequency>2900 and Frequency<3000):
-    	print("b")
-    else:
-    	print ("Frequency: ",Frequency)
+def getFrequency():
+    frequencies= []
+    for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
+        data = stream.read(chunk)
+        Frequency=Pitch(data)
+        frequencies.append(Frequency)
+    desiredFrequency=max(frequencies)-min(frequencies)
+    return desiredFrequency
+    
+def getNote():
+    if getFrequency()>2900 and getFrequency()<3000:
+        print ("b")
