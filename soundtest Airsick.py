@@ -1,7 +1,12 @@
 from matplotlib.mlab import find
 import pyaudio
 import numpy as np
+import pyautogui
 import math
+#from KeyPress import*
+import os
+
+
 import ctypes
 
 LONG = ctypes.c_long
@@ -54,6 +59,8 @@ def Input(structure):
 		return INPUT(INPUT_MOUSE, _INPUTunion(mi=structure))
 	if isinstance(structure, KEYBDINPUT):
 		return INPUT(INPUT_KEYBOARD, _INPUTunion(ki=structure))
+	if isinstance(structure, HARDWAREINPUT):
+		return INPUT(INPUT_HARDWARE, _INPUTunion(hi=structure))
 	raise TypeError('Cannot create INPUT structure!')
 
 WHEEL_DELTA = 120
@@ -235,11 +242,11 @@ KEY_6 = 0x36
 KEY_7 = 0x37
 KEY_8 = 0x38
 KEY_9 = 0x39
-KEY_A = 0x41
+KEY_A = 0x1E
 KEY_B = 0x42
 KEY_C = 0x43
-KEY_D = 0x44
-KEY_E = 0x45
+KEY_D = 0x20
+KEY_E = 0x12
 KEY_F = 0x46
 KEY_G = 0x47
 KEY_H = 0x48
@@ -251,13 +258,13 @@ KEY_M = 0x4D
 KEY_N = 0x4E
 KEY_O = 0x4F
 KEY_P = 0x50
-KEY_Q = 0x51
+KEY_Q = 0x10
 KEY_R = 0x52
-KEY_S = 0x53
+KEY_S = 0x1F
 KEY_T = 0x54
 KEY_U = 0x55
 KEY_V = 0x56
-KEY_W = 0x57
+KEY_W = 0x11
 KEY_X = 0x2D
 KEY_Y = 0x59
 KEY_Z = 0x2C
@@ -290,7 +297,7 @@ import time
 
 chunk = 1024
 FORMAT = pyaudio.paInt16
-CHANNELS = 1
+CHANNELS = 2
 RATE = 44100
 RECORD_SECONDS = 1000
 
@@ -298,7 +305,7 @@ RECORD_SECONDS = 1000
 def Pitch(signal):
 	signal = np.fromstring(signal, 'Int16');
 	crossing = [math.copysign(1.0, s) for s in signal]
-	index = find(np.diff(crossing));
+	index = find(np.diff(crossing)); 
 	f0=round(len(index) *RATE /(2*np.prod(len(signal))))
 	return f0;
 
@@ -327,22 +334,23 @@ input = True,
 output = True,
 frames_per_buffer = chunk)
 
-notes = {947:"b",969:"b",991:"b",
+notes = {1184:"d", 1163:"d",
+		1098:"c#", 1077:"c#", 1120:"c#",
+		947:"b",969:"b",991:"b",
 		883:"a", 861:"a",
-		775:"g",797:"g",
-		732:"f#",754:"f#",
+		775:"g",797:"g", 1550:"g", 1572:"g", 1593:"g",
+		732:"f#",754:"f#",1486:"f#",1507:"f#",
 		646:"e",668:"e",689:"e",
 		581:"Low D", 560:"Low D", 603:"Low D"}
-currentNote = ""
-noteCounter = 0
+#currentNote = ""
+#noteCounter = 0
 
-
-#currentNote = ["",""]
-#noteCounter = [0,0]
+currentNote = ["",""]
+noteCounter = [0,0]
 
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 	data = stream.read(chunk)
-	Frequency=Pitch(data)
+	'''Frequency=Pitch(data)
 	if(Frequency in notes):
 		print(notes[Frequency])
 		if(notes[Frequency]==currentNote and noteCounter > 2):
@@ -376,43 +384,68 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 		noteCounter += 1
 	else:
 		print("Frequency: ",Frequency)
-	
-	
-	'''Frequency = Pitches(data)
+
+		'''
+	Frequency = Pitches(data)
 	sleep = False
 	for i in range(0,2):
 		if(Frequency[i] in notes):
 			print(notes[Frequency[i]])
 			if(notes[Frequency[i]]==currentNote[i] and noteCounter[i] > 2):
 				if(notes[Frequency[i]]=="b"):
-					SendInput(Keyboard(KEY_X))
+					if (i==0):
+						SendInput(Keyboard(KEY_X))
+					else:
+						SendInput(Keyboard(KEY_Q))
 					sleep = True
 				elif(notes[Frequency[i]]=="a"):
-					SendInput(Keyboard(KEY_Z))
+					if(i==0):
+						SendInput(Keyboard(KEY_Z))
+					else:
+						SendInput(Keyboard(KEY_E))
 					sleep = True
 				elif(notes[Frequency[i]]=="g"):
-					SendInput(Keyboard(VK_UP))
+					if(i==0):
+						SendInput(Keyboard(VK_UP))
+					else:
+						SendInput(Keyboard(KEY_W))
 					sleep = True
 				elif(notes[Frequency[i]]=="f#"):
-					SendInput(Keyboard(VK_DOWN))
+					if(i==0):
+						SendInput(Keyboard(VK_DOWN))
+					else:
+						SendInput(Keyboard(KEY_S))
 					sleep = True
-				elif(notes[Frequency[i]]=="e"):
-					SendInput(Keyboard(VK_RIGHT))
+				elif(notes[Frequency[i]]=="e" or notes[Frequency[i]]=="d"):
+					if(i==0):
+						SendInput(Keyboard(VK_RIGHT))
+					else:
+						SendInput(Keyboard(KEY_D))
 					sleep = True
-				elif(notes[Frequency[i]]=="Low D"):
-					SendInput(Keyboard(VK_LEFT))
+				elif(notes[Frequency[i]]=="Low D" or notes[Frequency[i]]=="c#"):
+					if(i==0):
+						SendInput(Keyboard(VK_LEFT))
+					else:
+						SendInput(Keyboard(KEY_A))
 					sleep = True
-			if(notes[Frequency[i]]!=currentNote):
+			if(notes[Frequency[i]]!=currentNote[i]):
 				noteCounter[i] = 0
 			currentNote[i] = notes[Frequency[i]]
 			noteCounter[i] += 1
 		else:
 			print("Frequency: ",Frequency[i])
 	if(sleep):
+		sleep = False
 		time.sleep(0.1)
 		SendInput(Keyboard(VK_LEFT, KEYEVENTF_KEYUP))
 		SendInput(Keyboard(VK_RIGHT, KEYEVENTF_KEYUP))
 		SendInput(Keyboard(VK_DOWN, KEYEVENTF_KEYUP))
 		SendInput(Keyboard(VK_UP, KEYEVENTF_KEYUP))
 		SendInput(Keyboard(KEY_Z, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_X, KEYEVENTF_KEYUP))'''
+		SendInput(Keyboard(KEY_X, KEYEVENTF_KEYUP))
+		SendInput(Keyboard(KEY_Q, KEYEVENTF_KEYUP))
+		SendInput(Keyboard(KEY_E, KEYEVENTF_KEYUP))
+		SendInput(Keyboard(KEY_W, KEYEVENTF_KEYUP))
+		SendInput(Keyboard(KEY_S, KEYEVENTF_KEYUP))
+		SendInput(Keyboard(KEY_D, KEYEVENTF_KEYUP))
+		SendInput(Keyboard(KEY_A, KEYEVENTF_KEYUP))
