@@ -9,7 +9,7 @@ import math
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-CHUNK = 512
+CHUNK = 2048
 RECORD_SECONDS = 5
 WAVE_OUTPUT_FILENAME = "file.wav"
 
@@ -26,16 +26,16 @@ def Pitch(signal):
 
 def noteFinder(freq):
     if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
-    	pyautogui.press('down')
-    	print("a")
+        pyautogui.press('down')
+        print("a")
     if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
-    	pyautogui.press('left')
-    	print("g")
+        pyautogui.press('left')
+        print("g")
     elif(Frequency==581 or Frequency == 560 or Frequency == 603):
         pyautogui.press('right')
-    	print("Low D")
+        print("Low D")
     else:
-    	print ("Frequency: ",Frequency)
+        print ("Frequency: ",Frequency)
 
 
 # start Recording
