@@ -6,7 +6,7 @@ CHUNK = 1024
 dict = {'freq': , 'key': ''}
 
 def getNote(frequency):
-  return key
+  return dict[frequency]
 
 if len(sys.argv) < 2:
     print("Plays a wave file.\n\nUsage: %s filename.wav" % sys.argv[0])
