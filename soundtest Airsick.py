@@ -1,12 +1,7 @@
 from matplotlib.mlab import find
 import pyaudio
 import numpy as np
-import pyautogui
 import math
-import keyboard
-
-
-
 import ctypes
 
 LONG = ctypes.c_long
@@ -59,8 +54,6 @@ def Input(structure):
 		return INPUT(INPUT_MOUSE, _INPUTunion(mi=structure))
 	if isinstance(structure, KEYBDINPUT):
 		return INPUT(INPUT_KEYBOARD, _INPUTunion(ki=structure))
-	if isinstance(structure, HARDWAREINPUT):
-		return INPUT(INPUT_HARDWARE, _INPUTunion(hi=structure))
 	raise TypeError('Cannot create INPUT structure!')
 
 WHEEL_DELTA = 120
@@ -393,7 +386,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 			if(notes[Frequency[i]]==currentNote[i] and noteCounter[i] > 2):
 				if(notes[Frequency[i]]=="b"):
 					SendInput(Keyboard(KEY_X))
-
 					sleep = True
 				elif(notes[Frequency[i]]=="a"):
 					SendInput(Keyboard(KEY_Z))
