@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 
-chunk = 1024
+chunk = 512
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
@@ -38,5 +38,5 @@ def getFrequency():
     return desiredFrequency
     
 def getNote():
-    if getFrequency>2900 and getFrequency<3000:
+    if getFrequency()>2900 and getFrequency()<3000:
         print ("b")
