@@ -3,12 +3,11 @@ import pyaudio
 import numpy as np
 import math
 
-
-chunk = 1024
+chunk = 512
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 6
+RECORD_SECONDS = 20
 
 
 def Pitch(signal):
@@ -28,16 +27,28 @@ input = True,
 output = True,
 frames_per_buffer = chunk)
 
-for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
-    data = stream.read(chunk)
-    Frequency=Pitch(data)
-    if(Frequency>2900 and Frequency<3000):
-    	print("b")
+def getFrequency():
+    frequencies= []
+    for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
+        data = stream.read(chunk)
+        Frequency=Pitch(data)
+        frequencies.append(Frequency)
+    desiredFrequency=max(frequencies)-min(frequencies)
+    return desiredFrequency
+    
+def getNote():
+    if getFrequency()>2900 and getFrequency()<3000:
+        #Note=b
+        pyautogui.press('up')
+        print("b")
     if(Frequency == 2627 or Frequency == 2606 or Frequency == 2649 or Frequency == 2584):
+    	pyautogui.press('down')
     	print("a")
     if(Frequency == 2326 or Frequency == 2304 or Frequency == 2347 or Frequency == 2369):
+    	pyautogui.press('left')
     	print("g")
     elif(Frequency==581 or Frequency == 560 or Frequency == 603):
+        pyautogui.press('right')
     	print("Low D")
     else:
     	print ("Frequency: ",Frequency)
