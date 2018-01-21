@@ -102,7 +102,7 @@ DIK_U = 0x16
 DIK_V = 0x2F
 DIK_W = 0x11
 DIK_X = 0x2D
-DIK_Y = 0x15
+DIK_Y = 0x152
 DIK_Z = 0x2C
 
 DIK_UP = 0xC8    # UpArrow on arrow keypad */
