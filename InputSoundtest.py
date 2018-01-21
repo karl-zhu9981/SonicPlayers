@@ -1,7 +1,6 @@
 from matplotlib.mlab import find
 import pyaudio
 import numpy as np
-import pyautogui
 import math
 #from KeyPress import*
 import os

@@ -78,39 +78,39 @@ def movVkKeyPress(Frequency):
 			if (note == currentNote[i] and noteCounter[i] >= 2):
 				if (note == "b"):
 					if(i==0):
-						SendInput(Keyboard(KEY_X))
+						PressKey(KEY_X)
 					else:
-						SendInput(Keyboard(KEY_M))
+						PressKey(KEY_Q)
 					sleep = True
 				elif (note == "a"):
 					if(i==0):
-						SendInput(Keyboard(KEY_Z))
+						PressKey(KEY_Z)
 					else:
-						SendInput(Keyboard(KEY_N))
+						PressKey(KEY_E)
 					sleep = True
 				elif (note == "g"):
 					if(i==0):
-						SendInput(Keyboard(VK_UP))
+						PressKey(KEY_W)
 					else:
-						SendInput(Keyboard(KEY_I))
+						PressKey(KEY_I)
 					sleep = True
 				elif (note == "f#"):
 					if (i == 0):
-						SendInput(Keyboard(VK_DOWN))
+						PressKey(KEY_S)
 					else:
-						SendInput(Keyboard(KEY_K))
+						PressKey(KEY_K)
 					sleep = True
 				elif (note == "e"):
 					if(i==0):
-						SendInput(Keyboard(VK_RIGHT))
+						PressKey(KEY_D)
 					else:
-						SendInput(Keyboard(KEY_L))
+						PressKey(KEY_L)
 					sleep = True
 				elif (note == "Low D"):
 					if (i == 0):
-						SendInput(Keyboard(VK_LEFT))
+						PressKey(KEY_A)
 					else:
-						SendInput(Keyboard(KEY_J))
+						PressKey(KEY_J)
 					sleep = True
 			elif (note != currentNote[i]):
 				noteCounter[i] = 0
@@ -125,18 +125,18 @@ def movVkKeyPress(Frequency):
 def movVkKeyPressRel(Freq):
 	if(movVkKeyPress(Freq)):
 		time.sleep(0.1)
-		SendInput(Keyboard(VK_LEFT, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(VK_RIGHT, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(VK_DOWN, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(VK_UP, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_Z, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_X, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_M, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_N, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_I, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_K, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_L, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(KEY_J, KEYEVENTF_KEYUP))
+		ReleaseKey(KEY_I)
+		ReleaseKey(KEY_J)
+		ReleaseKey(KEY_K)
+		ReleaseKey(KEY_L)
+		ReleaseKey(KEY_Z)
+		ReleaseKey(KEY_X)
+		ReleaseKey(KEY_Q)
+		ReleaseKey(KEY_E)
+		ReleaseKey(KEY_W)
+		ReleaseKey(KEY_S)
+		ReleaseKey(KEY_D)
+		ReleaseKey(KEY_A)
 '''DirectX Key map'''
 def movDicKeyPress(Frequency):
 	sleep = False
@@ -148,39 +148,39 @@ def movDicKeyPress(Frequency):
 			if (note == currentNote[i] and noteCounter[i] > 2):
 				if (note == "b"):
 					if(i==0):
-						SendInput(Keyboard(DIK_X))
+						PressKey(DIK_X)
 					else:
-						SendInput(Keyboard(DIK_M))
+						PressKey(DIK_Q)
 					sleep = True
 				elif (note == "a"):
 					if(i==0):
-						SendInput(Keyboard(DIK_Z))
+						PressKey(DIK_Z)
 					else:
-						SendInput(Keyboard(DIK_N))
+						PressKey(DIK_E)
 					sleep = True
 				elif (note == "g"):
 					if(i==0):
-						SendInput(Keyboard(DIK_UP))
+						PressKey(DIK_W)
 					else:
-						SendInput(Keyboard(DIK_I))
+						PressKey(DIK_I)
 					sleep = True
 				elif (note == "f#"):
 					if (i == 0):
-						SendInput(Keyboard(DIK_DOWN))
+						PressKey(DIK_S)
 					else:
-						SendInput(Keyboard(DIK_K))
+						PressKey(DIK_K)
 					sleep = True
 				elif (note == "e"):
 					if(i==0):
-						SendInput(Keyboard(DIK_RIGHT))
+						PressKey(DIK_D)
 					else:
-						SendInput(Keyboard(DIK_L))
+						PressKey(DIK_L)
 					sleep = True
 				elif (note == "Low D"):
 					if (i == 0):
-						SendInput(Keyboard(DIK_LEFT))
+						PressKey(DIK_A)
 					else:
-						SendInput(Keyboard(DIK_J))
+						PressKey(DIK_J)
 					sleep = True
 			if (note != currentNote[i]):
 				noteCounter[i] = 0
@@ -193,18 +193,18 @@ def movDicKeyPress(Frequency):
 def movDicKeyPressRel(Freq):
 	if(movDicKeyPress(Freq)):
 		time.sleep(0.1)
-		SendInput(Keyboard(DIK_LEFT, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_RIGHT, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_DOWN, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_UP, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_Z, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_X, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_M, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_N, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_I, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_K, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_L, KEYEVENTF_KEYUP))
-		SendInput(Keyboard(DIK_J, KEYEVENTF_KEYUP))
+		ReleaseKey(DIK_W)
+		ReleaseKey(DIK_S)
+		ReleaseKey(DIK_A)
+		ReleaseKey(DIK_D)
+		ReleaseKey(DIK_Z)
+		ReleaseKey(DIK_X)
+		ReleaseKey(DIK_Q)
+		ReleaseKey(DIK_E)
+		ReleaseKey(DIK_I)
+		ReleaseKey(DIK_K)
+		ReleaseKey(DIK_L)
+		ReleaseKey(DIK_J)
 
 
 # start Recording
