@@ -168,7 +168,7 @@ KEY_8 = 0x38
 KEY_9 = 0x39
 KEY_A = 0x1E
 KEY_B = 0x42
-KEY_C = 0x43
+KEY_C = 0x2E
 KEY_D = 0x20
 KEY_E = 0x12
 KEY_F = 0x46
@@ -251,7 +251,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
 CHUNK = 1024
-RECORD_SECONDS = 1000
+RECORD_SECONDS = 100000
 WAVE_OUTPUT_FILENAME = "file.wav"
 
 audio = pyaudio.PyAudio()
@@ -278,32 +278,35 @@ def Pitch(signal):
 	indexR = find(np.diff(crossingR));
 	f0R = round(len(indexR) * RATE / (2 * np.prod(len(signalR))))
 
-	return [f0L, f0R];
+	return [f0L, f0R]
 
 
-def noteFinder(freq):
+def noteFinder(freq, instrument):
 	if ((freq > 946  and freq < 992) or (freq > 482 and freq < 506)):
 #	print("b")
 		return "b"
-	elif ((freq > 860 and freq < 884) or (freq > 429 and freq < 453)):
+	elif ((freq > 860 and freq < 884) or (freq > 429 and freq < 453) or (freq > 1740 and freq < 1790 and instrument==0)):
 #	print("a")
 		return "a"
-	elif ((freq > 774 and freq < 798 )or (freq > 387 and freq < 405)  or (freq > 1570 and freq < 1595)  ):
+	elif ((freq > 774 and freq < 798 ) or (freq > 387 and freq < 405)  or (freq > 1570 and freq < 1595)  ):
 #	print("g")
 		return "g"
 	elif ((freq > 731 and freq < 755) or (freq > 355 and freq < 379)  or (freq > 1460 and freq < 1510) ):
 #	print("f#")
 		return "f#"
-	elif ((freq > 645 and freq < 690)or (freq > 319 and freq < 339)or (freq > 1300 and freq < 1339)):
+	elif ((freq > 645 and freq < 690) or (freq > 319 and freq < 339) or (freq > 1300 and freq < 1339)):
 #	print("e")
 		return "e"
-	elif ((freq > 555 and freq <604)or (freq > 280 and freq < 304)):
+	elif ((freq > 555 and freq <604) or (freq > 280 and freq < 304) or(freq > 1740 and freq < 1790 and instrument==1)):
 #	print ("Low D")
 		return "d"
 
-	elif ((freq > 1141 and freq < 1185) or (freq > 1740 and freq < 1790) ):
+	elif ((freq > 1141 and freq < 1185)):
 #	print ("Low D")
 		return "d"
+	elif ((freq > 510 and freq < 540)):
+#	print ("Low D")
+		return "c"
 	else:
 #		print("Frequency: ", freq)
 		return None
@@ -314,59 +317,65 @@ noteCounter = [0,0]
 def movVkKeyPress(Frequency):
 	sleep = False
 	for i in range(0, 2):
-		if (noteFinder(Frequency[i])!= None):
-			note = noteFinder(Frequency[i])
+		if (noteFinder(Frequency[i],i)!= None):
+			note = noteFinder(Frequency[i],i)
 			print(note)
-			if (note == currentNote[i] and noteCounter[i] >= 2):
+			if (note == currentNote[i] and noteCounter[i] >= 3):
 				if (note == "b"):
 					if(i==0):
-						PressKey(KEY_X)
+						PressKey(KEY_Q)
 					else:
 						PressKey(KEY_Q)
 					sleep = True
 				elif (note == "a"):
 					if(i==0):
-						PressKey(KEY_Z)
+						PressKey(KEY_E)
 					else:
 						PressKey(KEY_E)
 					sleep = True
 				elif (note == "g"):
 					if(i==0):
-						PressKey(KEY_W)
+						PressKey(KEY_I)
 					else:
 						PressKey(KEY_I)
 					sleep = True
 				elif (note == "f#"):
 					if (i == 0):
-						PressKey(KEY_S)
+						PressKey(KEY_K)
 					else:
 						PressKey(KEY_K)
 					sleep = True
 				elif (note == "e"):
 					if(i==0):
-						PressKey(KEY_D)
+						PressKey(KEY_L)
 					else:
 						PressKey(KEY_L)
 					sleep = True
 				elif (note == "d"):
 					if (i == 0):
-						PressKey(KEY_A)
+						PressKey(KEY_J)
 					else:
 						PressKey(KEY_J)
+					sleep = True
+				elif (note == "c"):
+					if (i == 0):
+						PressKey(KEY_C)
+					else:
+						PressKey(KEY_C)
 					sleep = True
 			elif (note != currentNote[i]):
 				noteCounter[i] = 0
 			currentNote[i] = note
 			noteCounter[i] += 1
 		else:
-			print("Frequency: ", Frequency[i])
+			#print("Frequency: ", Frequency[i])
 			noteCounter[i] = 0
 			currentNote[i] = ""
 	return sleep
 
 def movVkKeyPressRel(Freq):
 	if(movVkKeyPress(Freq)):
-		time.sleep(0.1)
+		time.sleep(0.05)
 		ReleaseKey(KEY_I)
 		ReleaseKey(KEY_J)
 		ReleaseKey(KEY_K)
@@ -379,13 +388,14 @@ def movVkKeyPressRel(Freq):
 		ReleaseKey(KEY_S)
 		ReleaseKey(KEY_D)
 		ReleaseKey(KEY_A)
+		ReleaseKey(KEY_C)
 '''DirectX Key map'''
 def movDicKeyPress(Frequency):
 	sleep = False
 	print(Frequency)
 	for i in range(0,2):
-		if (noteFinder(Frequency[i])!=None):
-			note = noteFinder(Frequency[i])
+		if (noteFinder(Frequency[i],i)!=None):
+			note = noteFinder(Frequency[i],i)
 			print(note)
 			if (note == currentNote[i] and noteCounter[i] > 2):
 				if (note == "b"):
