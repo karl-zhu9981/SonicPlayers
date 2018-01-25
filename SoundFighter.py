@@ -15,14 +15,6 @@ WAVE_OUTPUT_FILENAME = "file.wav"
 
 audio = pyaudio.PyAudio()
 
-'''Notes for D major scale D5 lowest note'''
-notes = {947:"b",969:"b",991:"b",
-		883:"a", 861:"a",
-		775:"g",797:"g",
-		732:"f#",754:"f#",
-		646:"e",668:"e",689:"e",
-		581:"Low D", 560:"Low D", 603:"Low D"}
-
 #Turns raw audio input into frequency data
 def Pitch(signal):
 	signal = np.fromstring(signal, 'Int16')
