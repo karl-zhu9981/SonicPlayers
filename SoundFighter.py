@@ -140,6 +140,7 @@ def movKeyPress(Frequency):
 			noteCounter[i] += 1
 		else:
 			#print("Frequency: ", Frequency[i])
+			noteChanged = True
 			noteCounter[i] = 0
 			currentNote[i] = ""
 	return noteChanged
