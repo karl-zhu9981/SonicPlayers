@@ -32,7 +32,7 @@ def FFTPitch(signal):
 	#print(frequencies[np.argmax(frequencies)])
 	#print(Pitch(signal))
 
-	'''plt.draw()
+	plt.draw()
 	plt.clf()
 	plt.subplot(2,1,1)
 	plt.title("Original audio wave")
@@ -41,7 +41,7 @@ def FFTPitch(signal):
 	plt.title("Frequencies found")
 	plt.xlim(0,50)
 	plt.plot(frequencies)
-	plt.pause(0.00001)'''
+	plt.pause(0.00001)
 
 def Pitch(signal):
 	signal = np.fromstring(signal, 'Int16')
@@ -64,13 +64,13 @@ stream = audio.open(format=FORMAT, channels=CHANNELS,
 					frames_per_buffer=CHUNK)
 frames = []
 frequencies = []
-'''plt.show()
+plt.show()
 plt.subplot(2,1,1)
 plt.title("Original audio wave")
 plt.subplot(2,1,2)
 plt.title("Frequencies found")
 plt.xlim(0,50)
-plt.ylim(0,150000000)'''
+plt.ylim(0,150000000)
 
 plt.ion()
 for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
