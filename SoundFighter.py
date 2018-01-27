@@ -7,7 +7,7 @@ import time
 import ctypes
 
 FORMAT = pyaudio.paInt16
-CHANNELS = 2
+CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
 RECORD_SECONDS = 100000
@@ -30,6 +30,24 @@ def Pitch(signal):
 	f0R = round(len(indexR) * RATE / (2 * np.prod(len(signalR))))
 
 	return [f0L, f0R]
+
+
+def FFTPitch(signal):
+	# convert the raw data into a usable format
+	data = np.fromstring(signal, 'Int16')
+	# toss it in a numpy array
+	data = np.array(data)
+	# apply a fast fourier transformation to the data
+	# This converts it into an array of frequency amplitudes
+	data_fft = np.fft.fft(data)
+	# FFT gives complex numbers, so remove those so it's all real
+	frequencies = np.abs(data_fft)
+	# Filter out the noise
+	frequencies = [f if (1 < index < 50 and f > 1) else 0 for index, f in enumerate(frequencies)]
+	
+	strongestFreq = np.argmax(frequencies)*RATE/CHUNK
+	return [strongestFreq, strongestFreq] if frequencies[np.argmax(frequencies)] > 200000 else [0,0]
+	#print("The frequency is {} Hz".format(strongestFreq)) if frequencies[np.argmax(frequencies)] > 200000 else print("Noise")
 
 
 def noteFinder(freq, instrument):
@@ -64,14 +82,15 @@ def noteFinder(freq, instrument):
 
 currentNote = ["",""]
 noteCounter = [0,0]
-'''VK KEYS'''
+
 def movKeyPress(Frequency):
 	sleep = False
+	noteChanged = False
 	for i in range(0, 2):
-		if (noteFinder(Frequency[i],i)!= None):
-			note = noteFinder(Frequency[i],i)
+		note = noteFinder(Frequency[i],i)
+		if (note != None):
 			print(note)
-			if (note == currentNote[i] and noteCounter[i] >= 3):
+			if (note == currentNote[i]):
 				if (note == "b"):
 					if(i==0):
 						PressKey(DIK_Z)
@@ -98,13 +117,13 @@ def movKeyPress(Frequency):
 					sleep = True
 				elif (note == "e"):
 					if(i==0):
-						PressKey(DIK_A)
+						PressKey(DIK_D)
 					else:
 						PressKey(DIK_L)
 					sleep = True
 				elif (note == "d"):
 					if (i == 0):
-						PressKey(DIK_D)
+						PressKey(DIK_A)
 					else:
 						PressKey(DIK_J)
 					sleep = True
@@ -115,6 +134,7 @@ def movKeyPress(Frequency):
 						PressKey(DIK_C)
 					sleep = True
 			elif (note != currentNote[i]):
+				noteChanged = True
 				noteCounter[i] = 0
 			currentNote[i] = note
 			noteCounter[i] += 1
@@ -122,11 +142,11 @@ def movKeyPress(Frequency):
 			#print("Frequency: ", Frequency[i])
 			noteCounter[i] = 0
 			currentNote[i] = ""
-	return sleep
+	return noteChanged
 
 def movKeyPressRel(Freq):
 	if(movKeyPress(Freq)):
-		time.sleep(0.05)
+		#time.sleep(0.1)
 		ReleaseKey(DIK_I)
 		ReleaseKey(DIK_J)
 		ReleaseKey(DIK_K)
@@ -142,6 +162,7 @@ def movKeyPressRel(Freq):
 		ReleaseKey(DIK_C)
 		ReleaseKey(DIK_R)
 
+
 # start Recording
 stream = audio.open(format=FORMAT, channels=CHANNELS,
 					rate=RATE, input=True,
@@ -154,7 +175,7 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
 # Adds Data to frame for save to .wav file
 	frames.append(data)
 # Adds Data to frame for save to Frequency file
-	freq=Pitch(data)
+	freq=FFTPitch(data)
 	movKeyPressRel(freq)
 	frequencies.append(freq)
 # stop Recording
