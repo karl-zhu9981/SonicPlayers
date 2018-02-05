@@ -57,6 +57,7 @@ def getPitches(signal, instruments):
 
 def getNote(freq):
 	return {
+		-99999<freq<99999:None,
 		280<freq<304:"d",
 		319<freq<339:"e",
 		355<freq<379:"f#",
@@ -75,7 +76,7 @@ def getNote(freq):
 		1460<freq<1510:"f#",
 		1570<freq<1595:"g",
 		1740<freq<1790:"a"
-	}.get(freq,None)
+	}[1]
 
 currentNote = ["",""]
 noteCounter = [0,0]
