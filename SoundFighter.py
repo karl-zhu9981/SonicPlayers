@@ -46,122 +46,68 @@ def FFTPitch(signal):
 	frequencies = [f if (1 < index < 50 and f > 1) else 0 for index, f in enumerate(frequencies)]
 	
 	strongestFreq = np.argmax(frequencies)*RATE/CHUNK
-	return [strongestFreq, strongestFreq] if frequencies[np.argmax(frequencies)] > 200000 else [0,0]
+	return strongestFreq if frequencies[np.argmax(frequencies)] > 200000 else -1
 	#print("The frequency is {} Hz".format(strongestFreq)) if frequencies[np.argmax(frequencies)] > 200000 else print("Noise")
 
+def getPitches(signal, instruments):
+	Frequencys = []
+	for i in range(0,instruments):
+		Frequencys.append(FFTPitch(signal[i::instruments]))
+	return Frequencys
 
-def noteFinder(freq, instrument):
-	if ((freq > 946  and freq < 992) or (freq > 482 and freq < 506)):
-#	print("b")
-		return "b"
-	elif ((freq > 860 and freq < 884) or (freq > 429 and freq < 453) or (freq > 1740 and freq < 1790 and instrument==0)):
-#	print("a")
-		return "a"
-	elif ((freq > 774 and freq < 798 ) or (freq > 387 and freq < 405)  or (freq > 1570 and freq < 1595)  ):
-#	print("g")
-		return "g"
-	elif ((freq > 731 and freq < 755) or (freq > 355 and freq < 379)  or (freq > 1460 and freq < 1510) ):
-#	print("f#")
-		return "f#"
-	elif ((freq > 645 and freq < 690) or (freq > 319 and freq < 339) or (freq > 1300 and freq < 1339)):
-#	print("e")
-		return "e"
-	elif ((freq > 555 and freq <604) or (freq > 280 and freq < 304) or(freq > 1740 and freq < 1790 and instrument==1)):
-#	print ("Low D")
-		return "d"
-
-	elif ((freq > 1141 and freq < 1185)):
-#	print ("Low D")
-		return "d"
-	elif ((freq > 510 and freq < 540)):
-#	print ("Low D")
-		return "c"
-	else:
-#		print("Frequency: ", freq)
-		return None
+def getNote(freq):
+	return {
+		280<freq<304:"d",
+		319<freq<339:"e",
+		355<freq<379:"f#",
+		387<freq<405:"g",
+		429<freq<453:"a",
+		482<freq<506:"b",
+		510<freq<540:"c",
+		555<freq<604:"d",
+		645<freq<690:"e",
+		731<freq<755:"f#",
+		774<freq<798:"g",
+		860<freq<884:"a",
+		946<freq<992:"b",
+		1141<freq<1185:"d",
+		1300<freq<1339:"e",
+		1460<freq<1510:"f#",
+		1570<freq<1595:"g",
+		1740<freq<1790:"a"
+	}.get(freq,None)
 
 currentNote = ["",""]
 noteCounter = [0,0]
+keyMappings = [{"c":DIK_C,"d":DIK_A, "e":DIK_D, "f#":DIK_S, "g":DIK_W, "a":DIK_X, "b":DIK_Z},
+			   {"c":DIK_R,"d":DIK_J, "e":DIK_L, "f#":DIK_K, "g":DIK_I, "a":DIK_E, "b":DIK_Q}]
 
+# presses down keys corresponding to the notes currently being played
+# then returns a list of notes to be released
 def movKeyPress(Frequency):
-	sleep = False
-	noteChanged = False
-	for i in range(0, 2):
-		note = noteFinder(Frequency[i],i)
-		if (note != None):
+	note = []
+	notesToRelease = []
+	for i in range(0, len(Frequency)):
+		note.append(getNote(Frequency[i]))
+		if (note[i] != None):
 			print(note)
-			if (note == currentNote[i]):
-				if (note == "b"):
-					if(i==0):
-						PressKey(DIK_Z)
-					else:
-						PressKey(DIK_Q)
-					sleep = True
-				elif (note == "a"):
-					if(i==0):
-						PressKey(DIK_X)
-					else:
-						PressKey(DIK_E)
-					sleep = True
-				elif (note == "g"):
-					if(i==0):
-						PressKey(DIK_W)
-					else:
-						PressKey(DIK_I)
-					sleep = True
-				elif (note == "f#"):
-					if (i == 0):
-						PressKey(DIK_S)
-					else:
-						PressKey(DIK_K)
-					sleep = True
-				elif (note == "e"):
-					if(i==0):
-						PressKey(DIK_D)
-					else:
-						PressKey(DIK_L)
-					sleep = True
-				elif (note == "d"):
-					if (i == 0):
-						PressKey(DIK_A)
-					else:
-						PressKey(DIK_J)
-					sleep = True
-				elif (note == "c"):
-					if (i == 0):
-						PressKey(DIK_R)
-					else:
-						PressKey(DIK_C)
-					sleep = True
-			elif (note != currentNote[i]):
-				noteChanged = True
-				noteCounter[i] = 0
-			currentNote[i] = note
+			PressKey(keyMappings[i][note[i]])
+			if (note[i] != currentNote[i]):
+				notesToRelease.append(currentNote[i])
+			currentNote[i] = note[i]
 			noteCounter[i] += 1
 		else:
 			#print("Frequency: ", Frequency[i])
-			noteChanged = True
+			notesToRelease.append(currentNote[i])
 			noteCounter[i] = 0
 			currentNote[i] = ""
-	return noteChanged
+	return notesToRelease
 
 def movKeyPressRel(Freq):
-	if(movKeyPress(Freq)):
-		#time.sleep(0.1)
-		ReleaseKey(DIK_I)
-		ReleaseKey(DIK_J)
-		ReleaseKey(DIK_K)
-		ReleaseKey(DIK_L)
-		ReleaseKey(DIK_Z)
-		ReleaseKey(DIK_X)
-		ReleaseKey(DIK_Q)
-		ReleaseKey(DIK_E)
-		ReleaseKey(DIK_W)
-		ReleaseKey(DIK_S)
-		ReleaseKey(DIK_D)
-		ReleaseKey(DIK_A)
-		ReleaseKey(DIK_C)
-		ReleaseKey(DIK_R)
+	notesToRelease = movKeyPress(Freq)
+	for i in range(0,len(notesToRelease)):
+		if(notesToRelease[i]!=''):
+			ReleaseKey(keyMappings[i][notesToRelease[i]])
 
 
 # start Recording
@@ -176,7 +122,7 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
 # Adds Data to frame for save to .wav file
 	frames.append(data)
 # Adds Data to frame for save to Frequency file
-	freq=FFTPitch(data)
+	freq = getPitches(data, CHANNELS)
 	movKeyPressRel(freq)
 	frequencies.append(freq)
 # stop Recording
